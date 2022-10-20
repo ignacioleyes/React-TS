@@ -1,39 +1,39 @@
-import { useState } from 'react'
-import './App.css'
-
 // Components
 import { ToDo } from "./components/ToDo";
+import { Form } from "./components/Form";
 
-interface TodoType {
-  id: number,
-  text: string,
-  date: string,
-  isDone: boolean
-}
+// Hooks
+import { useToDoHook } from "./hooks/useToDoHook";
+
+// Styles
+import "./App.css";
 
 function App() {
-  const [toDoData, setTodoData] = useState<Array<TodoType>>([
-    {
-      id: 1,
-      text: "Learn more JS",
-      date: new Date().toLocaleDateString(),
-      isDone: false,
-    },
-    {
-      id: 2,
-      text: "Also learn TS",
-      date: new Date().toLocaleDateString(),
-      isDone: false,
-    }
-  ]);
+  const [toDos, dispatch] = useToDoHook();
 
+  const createToDoHandler = (newToDoText: string): void => {
+    dispatch({
+      type: "add",
+      payload: {
+        text: newToDoText,
+      },
+    });
+  };
+
+  const deleteToDoHandler = (id: string): void => {
+    dispatch({
+      type: "delete",
+      payload: { id },
+    });
+  };
 
   return (
     <div className="App">
       <h1>To Do List - TS</h1>
-      <ToDo toDoData={toDoData}/>
+      <Form createToDo={createToDoHandler} />
+      <ToDo toDoData={toDos} deleteToDo={deleteToDoHandler}/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
